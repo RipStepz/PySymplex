@@ -1,14 +1,5 @@
-import re
+from funciones import Obtener_tipo_de_dato
 
-ex = re.compile("\d\d\d")
+Almacen_Variables = {}
 
-cadena_uno = ex.search("213")
-##cadena_dos = ex.search("arturo al2314321monacid").group()
-##cadena_tres = ex.search("hsahsak2134sadfsa").group()
-
-
-if cadena_uno is None:
-    print("no existen coincidencias")
-
-else:
-    print("Existen coincidencias")
+print(Obtener_tipo_de_dato("DP $_Var ASIG 3654"))
