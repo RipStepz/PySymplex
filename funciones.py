@@ -1,7 +1,9 @@
 import re
-from RegEx import Int, String, Bool_RegEx, Procesamiento_datos
+from RegEx import Int, String, Bool_RegEx, Procesamiento_datos, ASIG
 
-def Boolenizar(B_S):
+Almacen_Variables = {}
+
+def Boolenizar(cadena):
     '''
     ***
     B_R : RegEx de los booleanos
@@ -10,13 +12,13 @@ def Boolenizar(B_S):
     ***
     Retorna un booleano o imprime por consola "Valor no booleano"
     ***
-    Compara el string con true, para que guarde true o false en una variable y lo retorna
+    Compara el string con true, para que guarde true o false en una variable y lo retorna, caso contrario retorna None
     '''
-    if re.match(Bool_RegEx, B_S):
-        Valor_bool = (B_S == "True")
+    if re.match(Bool_RegEx, cadena):
+        Valor_bool = (cadena == "True")
         return Valor_bool
     else:
-        print("Valor no booleano")
+        None
 
 def Obtener_tipo_de_dato(cadena):
     '''
@@ -30,12 +32,19 @@ def Obtener_tipo_de_dato(cadena):
     corresponde a int, string o bool, en caso de ser ninguna retorna bool
     '''
     match = re.match(Procesamiento_datos, cadena)
+    valor = match.group(1)
+    
     if match:
-        valor = match.group(1)
+        
         if re.match(Int, valor):
-            return "int"
+            return int(valor)  
+        
         elif re.match(String, valor):
-            return "string"
+
+            return valor  
         elif re.match(Bool_RegEx, valor):
-            return "bool"
+            return Boolenizar(valor)
     return None
+
+def Asignacion(cadena):
+    match = re.match(ASIG, cadena)

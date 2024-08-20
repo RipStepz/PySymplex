@@ -1,4 +1,4 @@
-Variable = r'\$_\w+'
+Variable = r'\$_[A-Z]\w*'
 DEFINE_PATTERN = r'^\s*DEFINE\s+' + Variable + r'\s*$'
 
 Int = r'\d+'
