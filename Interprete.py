@@ -1,15 +1,30 @@
-from funciones import Obtener_tipo_de_dato, prueba , obtener_cosas_a_Sumar, Realizar_suma , Auxiliar_Suma_string_int, obtener_cosas_a_multiplicar
-from funciones import obtener_cosas_Mayor_que , obtener_cosas_a_comparar
-##Obtener_tipo_de_dato("DP $_Var1 ASIG 6")
-##Obtener_tipo_de_dato("DP $_Var2 ASIG 8")
-##Obtener_tipo_de_dato("DP $_Var + $_Var1 6")
-##Obtener_tipo_de_dato("DP $_Var > $_Var1 $_Var2")
-##Obtener_tipo_de_dato("DP $_Var  5  ==  2")
-##Obtener_tipo_de_dato("DP $_Var * $_Var1 5")
-##print(obtener_cosas_a_sumar("DP + $_Var1 False  ", 1))
-##Realizar_suma("DP + $_Var1 5")
+from funciones import Obtener_tipo_de_dato, prueba, MOSTRAR
+from aux_funcion import limpiar_archivo
+
+# Obtener_tipo_de_dato("DEFINE $_Largo")
+# Obtener_tipo_de_dato("DEFINE $_Ancho")
+# Obtener_tipo_de_dato("DEFINE $_Area")
+# Obtener_tipo_de_dato("DEFINE $_Texto")
+# Obtener_tipo_de_dato("DP $_Largo ASIG 6")
+# Obtener_tipo_de_dato("DP $_Ancho ASIG 5")
+# Obtener_tipo_de_dato("DP $_Area * $_Largo $_Ancho")
+# Obtener_tipo_de_dato("DP $_Texto ASIG #La altura del rectangulo es #")
+# Obtener_tipo_de_dato("DP $_Texto + $_Texto $_Area")
+# Obtener_tipo_de_dato("DEFINE $_Var2")
+# Obtener_tipo_de_dato("DP $_Var1 ASIG 6")
+# Obtener_tipo_de_dato("DP $_Var2 ASIG 8")
+# Obtener_tipo_de_dato("DP $_Var1 + $_Var2 $_Var1")
 ##prueba()
+limpiar_archivo('archivo.txt')
+Flag = True
 
-##print(obtener_cosas_a_multiplicar("DP $_Var * 5 2" , 2))
 
-##print(obtener_cosas_a_comparar("DP $_Var == $_Va 2", 1))
+with open('codigo.txt', 'r') as archivo:
+    linea = archivo.readline()
+    while linea:
+        linea = linea.strip()  # Quitamos espacios en blanco y saltos de línea
+        if linea:  # Si la línea no está vacía
+            Obtener_tipo_de_dato(linea)  # Llama a tu función para procesar la línea
+        linea = archivo.readline()
+
+##prueba()

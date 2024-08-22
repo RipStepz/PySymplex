@@ -1,75 +1,28 @@
 import re
-from RegEx import Int, String, Bool_RegEx, Procesamiento_datos, ASIG, Suma, Multiplicacion, Mayor_que,  Igual_que, Variable
-
+from RegEx import Int, String, MOSTRAR_RegEx, Procesamiento_datos, ASIG, Suma, Multiplicacion, Mayor_que,  Igual_que, Variable, DEFINE_PATTERN
+from Repetitivo import *
+from aux_funcion import *
 Almacen_Variables = {}
 
-def Boolenizar(cadena):
+def DEFINE(cadena):
     '''
     ***
-    cadena : String a pasar a booleano
+    cadena : string
     ...
     ***
-    Retorna un booleano o None
+    No hay retorno
     ***
-    Compara el string con true, para que guarde true o false en una variable y lo retorna, caso contrario retorna None
+    La funcion recicla una funcion con la que obtengo la variable y luego simplemente compruebo
+    si ya existe la variable, si no existe si crea
     '''
-    if re.match(Bool_RegEx, cadena):
-        Valor_bool = (cadena == "True")
-        return Valor_bool
+    Var_para_dic = Obtener_variable(cadena , 1)
+    
+    if Var_para_dic not in Almacen_Variables:
+        Almacen_Variables[Var_para_dic] = None
     else:
-        None
+        print(Var_para_dic)
+        print("No se puede reedifinir una variable")
 
-def Obtener_variable(cadena):
-    '''
-    ***
-    cadena : string
-    ...
-    ***
-    La variable que busco
-    ***
-    Encuentro el $ que significa que encontre la variable y despues el espacio con eso puedo obtener la variable del string general
-    y retorno la variable
-    '''
-    inicio = cadena.find('$')
-    fin = cadena.find(' ', inicio)
-    variable = cadena[inicio:fin].strip()
-    return variable
-
-def Obtener_informacion_a_almacenar(cadena):
-    '''
-    ***
-    cadena : string
-    ...
-    ***
-    Retorna lo que quiero almacenar con el asig
-    ***
-    Encuentro el asig porque lo que necesito es lo que le sigue y retorno valor que es lo que le sigue a "ASIG"
-    '''
-    inicio_asig = cadena.find('ASIG')
-    inicio_valor = inicio_asig + len('ASIG')
-    valor = cadena[inicio_valor:].strip()
-    return valor
-
-def Control_tipo_dato(cadena):
-    '''
-    ***
-    cadena : string
-    ***
-    Retorna, el string mismo, el string boolenizado o el string convertido a numero
-    ***
-    Para llegar al retorno esperado uso las RegEx para comprobar a que tipo de dato me estoy enfrentado
-    '''
-    cadena = cadena.strip()  
-
-    if re.match(Int, cadena):
-        return int(cadena)
-    
-    elif re.match(Bool_RegEx, cadena):
-        return Boolenizar(cadena)
-    
-    else:
-        return cadena
-    
 def Asignacion(cadena):
     '''
     ***
@@ -82,8 +35,12 @@ def Asignacion(cadena):
     con eso guardo en un diccionario con llave del nombre de la variable la info, en el caso de que info se encuentre en el diccionario, saco su info y la agregro
     en el caso de que no este en el diccionario, estoy tratando de asignar una variable que no existe, lo que tiene que tirar error
     '''
-    Var = Obtener_variable(cadena)
+    Var = Obtener_variable(cadena , 0)
     Info = Obtener_informacion_a_almacenar(cadena)
+
+    if Var not in Almacen_Variables:
+        print("No puedes asignar algo a una variable que no existe")
+        return None
     
     if (bool(re.match(Variable, Info))):
         if Info not in Almacen_Variables:
@@ -94,138 +51,6 @@ def Asignacion(cadena):
 
     elif (Info not in Almacen_Variables):
         Almacen_Variables[Var] = Control_tipo_dato(Info)
-
-def obtener_cosas_a_Sumar(cadena, n):
-    '''
-    ***
-    cadena : string
-    n : entero
-    ...
-    ***
-    retorna el primer o segundo valor dependiendo de cual se le pida a la funcion, retorna false en caso
-    de no ser un valor esperado
-    ***
-    Cree una nueva Regex con el objetivo de poder crear dos grupos y extrear los valores
-    luego simplemente retorno uno o el otro dependiendo de cual pidan en la funcion, en caso de ser un valor invalido, se retorna false
-    '''
-    regex_int = r'\+\s*(' + Variable + r'|' + Int + r'|'+ String +r')\s+(' + Variable + r'|' + Int + r'|'+ String + r')'
-    match = re.search(regex_int , cadena)
-
-    if match:
-    
-        valor1 = match.group(1)
-        valor1.strip()
-        valor2 = match.group(2)
-        valor2.strip()
-        
-        if n == 1:
-            return valor1
-        elif n == 2:
-            return valor2
-    
-    else:
-        return False
-    
-def obtener_cosas_a_multiplicar(cadena, n):
-    '''
-    ***
-    cadena : string
-    n : entero
-    ...
-    ***
-    retorna el primer o segundo valor dependiendo de cual se le pida a la funcion, retorna false en caso
-    de no ser un valor esperado
-    ***
-    Cree una nueva Regex con el objetivo de poder crear dos grupos y extrear los valores
-    luego simplemente retorno uno o el otro dependiendo de cual pidan en la funcion, en caso de ser un valor invalido, se retorna false
-    '''
-    regex_multiplicacion = r'\*\s*(' + Variable + r'|' + Int + r')\s+(' + Variable + r'|' + Int + r')'
-    match = re.search(regex_multiplicacion, cadena)
-
-    if match:
-        valor1 = match.group(1).strip()
-        valor2 = match.group(2).strip()
-
-        if n == 1:
-            return valor1
-        elif n == 2:
-            return valor2
-    else:
-        return False
-
-def obtener_cosas_Mayor_que(cadena, n):
-    '''
-    ***
-    cadena : string
-    n : entero
-    ...
-    ***
-    Retorna el primer o segundo valor dependiendo de cuál se le pida a la función, retorna False en caso
-    de no ser un valor esperado.
-    ***
-    Cree una nueva Regex con el objetivo de crear dos grupos y extraer los valores
-    luego simplemente retorno uno o el otro dependiendo de cuál pidan en la función. En caso de ser un valor inválido, se retorna False.
-    '''
-    regex_comparacion = r'>\s*(' + Variable + r'|' + Int + r')\s+(' + Variable + r'|' + Int + r')'
-    match = re.search(regex_comparacion, cadena)
-
-    if match:
-        valor1 = match.group(1).strip()
-        valor2 = match.group(2).strip()
-
-        if n == 1:
-            return valor1
-        elif n == 2:
-            return valor2
-    else:
-        return False
-    
-def obtener_cosas_a_comparar(cadena, n):
-    '''
-    ***
-    cadena : string
-    n : entero
-    ...
-    ***
-    Retorna el primer o segundo valor dependiendo de cuál se le pida a la función, retorna False en caso
-    de no ser un valor esperado.
-    ***
-    Cree una nueva Regex con el objetivo de crear dos grupos y extraer los valores
-    luego simplemente retorno uno o el otro dependiendo de cuál pidan en la función. En caso de ser un valor inválido, se retorna False.
-    '''
-    regex_comparacion = r'==\s*(' + Variable + r'|' + Int + r'|' + String + r')\s+(' + Variable + r'|' + Int + r'|' + String + r')'
-    match = re.search(regex_comparacion, cadena)
-
-    if match:
-        valor1 = match.group(1).strip()
-        valor2 = match.group(2).strip()
-
-        if n == 1:
-            return valor1
-        elif n == 2:
-            return valor2
-    else:
-        return False
-
-def Auxiliar_Suma_string_int(cadena, n):
-    '''
-    ***
-    cadena : string
-    n: entero
-    ...
-    ***
-    El string es retornado sin uno de los #
-    ***
-    Esta funcion dependiendo del n que le entregen (entre 1 y 2) quita un # (si n = 1 se quita el primer
-    n=2 el segundo) y se retorna ese string
-
-    '''
-    if n == 1:
-        # Eliminar el primer #
-        return cadena[1:] if cadena.startswith('#') else cadena
-    elif n == 2:
-        # Eliminar el último #
-        return cadena[:-1] if cadena.endswith('#') else cadena
 
 def Realizar_suma(cadena):
     '''
@@ -242,7 +67,11 @@ def Realizar_suma(cadena):
 
         Numero_1 = obtener_cosas_a_Sumar(cadena, 1)
         Numero_2 = obtener_cosas_a_Sumar(cadena, 2)
-        Variable_a_asignar = Obtener_variable(cadena)
+        Variable_a_asignar = Obtener_variable(cadena , 0)
+
+        if Variable_a_asignar not in Almacen_Variables:
+            print("No puedes asignar algo a una variable que no existe")
+            return None
         
         if Numero_1 in Almacen_Variables:
             Numero_1 = Almacen_Variables[Numero_1]
@@ -294,8 +123,12 @@ def Realizar_multiplicacion(cadena):
         
         Numero_1 = obtener_cosas_a_multiplicar(cadena, 1)
         Numero_2 = obtener_cosas_a_multiplicar(cadena, 2)
-        Variable_a_asignar = Obtener_variable(cadena)
+        Variable_a_asignar = Obtener_variable(cadena , 0)
 
+        if Variable_a_asignar not in Almacen_Variables:
+            print("No puedes asignar algo a una variable que no existe")
+            return None
+        
         if Numero_1 in Almacen_Variables:
             Numero_1 = Almacen_Variables[Numero_1]
         
@@ -329,6 +162,11 @@ def Realizar_Mayor_que(cadena):
 
         Numero_1 = obtener_cosas_Mayor_que(cadena, 1)
         Numero_2 = obtener_cosas_Mayor_que(cadena, 2)
+        Variable_a_asignar = Obtener_variable(cadena , 0)
+
+        if Variable_a_asignar not in Almacen_Variables:
+            print("No puedes asignar algo a una variable que no existe")
+            return None
         
         if Numero_1 in Almacen_Variables:
             Numero_1 = Almacen_Variables[Numero_1]
@@ -338,13 +176,13 @@ def Realizar_Mayor_que(cadena):
         
         Numero_1 = str(Numero_1) if Numero_1 is not None else ""
         Numero_2 = str(Numero_2) if Numero_2 is not None else ""
-     
+
         if (bool(re.match(Int, Numero_1))) and (bool(re.match(Int, Numero_2))):
             Sumado = int(Numero_1) > int(Numero_2)
-            return Sumado
+            Almacen_Variables[Variable_a_asignar] = Sumado
 
         else:
-            print("No se realizo mayor que, ya que estas sumando una variable que no esta definida")        
+            print("Operacion > mal definida")        
 
     else:
         return print("Operacion Mayor que invalida")
@@ -364,7 +202,11 @@ def Realizar_Comaparion_igualdad(cadena):
 
         Numero_1 = obtener_cosas_a_comparar(cadena, 1)
         Numero_2 = obtener_cosas_a_comparar(cadena, 2)
-        Variable_a_asignar = obtener_cosas_a_comparar(cadena)
+        Variable_a_asignar = Obtener_variable(cadena , 0)
+
+        if Variable_a_asignar not in Almacen_Variables:
+            print("No puedes asignar algo a una variable que no existe")
+            return None
         
         if Numero_1 in Almacen_Variables:
             Numero_1 = Almacen_Variables[Numero_1]
@@ -377,16 +219,33 @@ def Realizar_Comaparion_igualdad(cadena):
      
         if (bool(re.match(Int, Numero_1))) and (bool(re.match(Int, Numero_2))):
             Sumado = int(Numero_1) == int(Numero_2)
-            return Sumado
+            Almacen_Variables[Variable_a_asignar] = Sumado
         
+        if (bool(re.match(String, Numero_1))) and (bool(re.match(String, Numero_2))):
+            Sumado = Numero_1 == Numero_2
+            Almacen_Variables[Variable_a_asignar] = Sumado
+
         elif ((bool(re.match(String, Numero_1))) and (bool(re.match(Int, Numero_2)))) or ((bool(re.match(Int, Numero_1))) and (bool(re.match(String, Numero_2)))):
             return False
 
         else:
-            print("No se realizo suma, ya que estas sumando una variable que no esta definida")        
+            print("No se realizo comparacion, ya que estas comparando una variable que no esta definida")        
 
     else:
-        return print("Suma invalida")    
+        return print("comparacion invalida")    
+
+def MOSTRAR(cadena):
+    Variable_a_buscar = Obtener_variable(cadena, 2)
+    
+    if Variable_a_buscar not in Almacen_Variables:
+        print(f"Variable {Variable_a_buscar} no existe")
+        return None
+    else:
+        value = Almacen_Variables[Variable_a_buscar]
+        # Abrir el archivo en modo append para no sobrescribir el contenido existente
+        with open('archivo.txt', 'a') as archivo:
+            archivo.write(value + "\n")
+        
 
 def Obtener_tipo_de_dato(cadena):
     '''
@@ -397,30 +256,36 @@ def Obtener_tipo_de_dato(cadena):
     Retorna el valor del dato que contenga la cadena, dependiendo del tipo de operación
     ***
     '''
-    if re.match(ASIG, cadena):
-        Asignacion(cadena)
-        ##print("Se pide un ASIG")
+    if re.match(Procesamiento_datos, cadena):
 
-    elif re.match(Suma, cadena):
-        Realizar_suma(cadena)
-        ##print("Se pide una suma")
+        if re.match(ASIG, cadena):
+            Asignacion(cadena)
 
-    elif re.match(Multiplicacion, cadena):
-        Realizar_multiplicacion(cadena)
-        ##print("Se pide una multiplicación")
+        elif re.match(Suma, cadena):
+            Realizar_suma(cadena)
 
-    elif re.match(Mayor_que, cadena):
-        print(Realizar_Mayor_que(cadena))
-        ##print("Se pide una operación de mayor que")
+        elif re.match(Multiplicacion, cadena):
+            Realizar_multiplicacion(cadena)
 
-    elif re.match(Igual_que, cadena):
-        print(Realizar_Comaparion_igualdad(cadena))
-        ##print("Se pide una comparación de igualdad")
+        elif re.match(Mayor_que, cadena):
+            Realizar_Mayor_que(cadena)
 
+        elif re.match(Igual_que, cadena):
+            Realizar_Comaparion_igualdad(cadena)
+            ##print("Se pide una comparación de igualdad")
+
+        else:
+            print("No se ha detectado una operación válida")
+
+        return None
+    
+    elif re.match(DEFINE_PATTERN, cadena):
+        DEFINE(cadena)
+
+    elif re.match(MOSTRAR_RegEx, cadena):
+        MOSTRAR(cadena)
     else:
-        print("No se ha detectado una operación válida")
-
-    return None
+        print("Error de sintaxis")
 
 def prueba():
     for clave, valor in Almacen_Variables.items():
