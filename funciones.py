@@ -246,7 +246,6 @@ def MOSTRAR(cadena):
         with open('archivo.txt', 'a') as archivo:
             archivo.write(value + "\n")
         
-
 def Obtener_tipo_de_dato(cadena):
     '''
     ***
