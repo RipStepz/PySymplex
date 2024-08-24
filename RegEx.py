@@ -14,7 +14,3 @@ Igual_que = r'.*\s*(' + Variable + r'|' + Int + r'|' + String + r')\s+==\s+(' + 
 MOSTRAR_RegEx = r'\s*MOSTRAR\(' + Variable +r'\)\s*$'
 
 Procesamiento_datos = r'^\s*DP\s+' + Variable + r'\s+.*'
-
-
-##print(bool(re.match(Procesamiento_datos,"DP $_Vardest > 5 $_Vardest" )))
-##print(bool(re.match(MOSTRAR,"MOSTRAR($_texto)")))

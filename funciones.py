@@ -4,10 +4,11 @@ from Repetitivo import *
 from aux_funcion import *
 Almacen_Variables = {}
 
-def DEFINE(cadena):
+def DEFINE(cadena, i):
     '''
     ***
     cadena : string
+    n : int
     ...
     ***
     No hay retorno
@@ -19,49 +20,55 @@ def DEFINE(cadena):
     
     if Var_para_dic not in Almacen_Variables:
         Almacen_Variables[Var_para_dic] = None
+        return True
     else:
-        print(Var_para_dic)
-        print("No se puede reedifinir una variable")
+        print(f"No se puede reedifinir la variable {Var_para_dic} en la linea {i}")
+        return False
+        
 
-def Asignacion(cadena):
+def Asignacion(cadena, i):
     '''
     ***
     cadena : string
+    i : int
     ...
     ***
-    No retorna nada solo controla la logica de el almacenamiento de las variables
+    Retorna booleanos
     ***
-    En el primer if me aseguro que la informacion que quiero almacenar no es una variable porque hay que tratar ese caso distinto
-    con eso guardo en un diccionario con llave del nombre de la variable la info, en el caso de que info se encuentre en el diccionario, saco su info y la agregro
-    en el caso de que no este en el diccionario, estoy tratando de asignar una variable que no existe, lo que tiene que tirar error
+    Esta funcion retorna true o false dependiendo de si hay un error o no el el codigo proporcionado
+    controla cada caso en el que podria funcionar o fallar una asignacion
     '''
     Var = Obtener_variable(cadena , 0)
     Info = Obtener_informacion_a_almacenar(cadena)
 
     if Var not in Almacen_Variables:
-        print("No puedes asignar algo a una variable que no existe")
-        return None
+        print(f"No puedes asignar un valor a {Var} en la linea {i} ya que no esta definida")
+        return True
     
     if (bool(re.match(Variable, Info))):
         if Info not in Almacen_Variables:
-            print("No se puede asignar una variable no existente a otra")
+            print(f"Operacion ASIG mal definida, ya que {Info} no esta definida. Error en linea {i}")
+            return True
         else:
             Auxiliar = Almacen_Variables[Info]
             Almacen_Variables[Var] = Control_tipo_dato(Auxiliar)
+            return False
 
     elif (Info not in Almacen_Variables):
         Almacen_Variables[Var] = Control_tipo_dato(Info)
+        return False
 
-def Realizar_suma(cadena):
+def Realizar_suma(cadena, i):
     '''
     ***
     cadena: string 
+    i : int
     ...
     ***
-    No retorna nada, solo hace la suma de los numeros y los guarda en el diccionario
+    retorna true o none
     ***
     Tomo en cuenta todas las posibilidades que puede pasar con la suma y las resuelvo, en caso de ser una suma
-    imposible printeo por consola "No se realizo suma, ya que estas sumando una variable que no esta definida"
+    imposible printeo por consola y retorno True para hacer control de flujo
     '''
     if obtener_cosas_a_Sumar(cadena, 1):
 
@@ -70,8 +77,8 @@ def Realizar_suma(cadena):
         Variable_a_asignar = Obtener_variable(cadena , 0)
 
         if Variable_a_asignar not in Almacen_Variables:
-            print("No puedes asignar algo a una variable que no existe")
-            return None
+            print(f"No puedes asignar un valor a la varible {Variable_a_asignar} ya que no esta definida existe. Linea {i}")
+            return True
         
         if Numero_1 in Almacen_Variables:
             Numero_1 = Almacen_Variables[Numero_1]
@@ -103,21 +110,22 @@ def Realizar_suma(cadena):
             Almacen_Variables[Variable_a_asignar] = Sumado
 
         else:
-            print("No se realizo suma, ya que estas sumando una variable que no esta definida")        
+            print(f"No se realizo suma, ya que estas sumando una variable que no esta definida. linea {i}")        
 
     else:
-        return print("Suma invalida")
+        print(f"Suma invalida en {i}")
 
-def Realizar_multiplicacion(cadena):
+def Realizar_multiplicacion(cadena,i):
     '''
     ***
     cadena: string 
+    i: int
     ...
     ***
-    No retorna nada, solo hace la multiplicacion de los numeros y los guarda en el diccionario
+    True o None
     ***
     Tomo en cuenta todas las posibilidades que puede pasar con la multiplicacion y las resuelvo, en caso de ser una multiplicacion
-    imposible printeo por consola "No se realizo la multiplicacion, ya que estas multiplicacndo una variable que no esta definida"
+    imposible printeo por consola y retorno true para control de flujo
     '''
     if obtener_cosas_a_multiplicar(cadena, 1):
         
@@ -126,8 +134,8 @@ def Realizar_multiplicacion(cadena):
         Variable_a_asignar = Obtener_variable(cadena , 0)
 
         if Variable_a_asignar not in Almacen_Variables:
-            print("No puedes asignar algo a una variable que no existe")
-            return None
+            print(f"No puedes asignar un valor a {Variable_a_asignar} que no existe. Linea {i}")
+            return True
         
         if Numero_1 in Almacen_Variables:
             Numero_1 = Almacen_Variables[Numero_1]
@@ -143,12 +151,14 @@ def Realizar_multiplicacion(cadena):
             Almacen_Variables[Variable_a_asignar] = Sumado
 
         else:
-            print("No se realizo la Multiplicacion, ya que estas multiplicando una variable que no esta definida")        
+            print(f"No se realizo la Multiplicacion, ya que estas multiplicando una variable que no esta definida. Linea {i}") 
+            return True       
 
     else:
-        return print("Multiplicacion invalida")
+        print("Multiplicacion invalida")
+        return True
 
-def Realizar_Mayor_que(cadena):
+def Realizar_Mayor_que(cadena,i):
     '''
     ***
     cadena: string 
@@ -165,8 +175,8 @@ def Realizar_Mayor_que(cadena):
         Variable_a_asignar = Obtener_variable(cadena , 0)
 
         if Variable_a_asignar not in Almacen_Variables:
-            print("No puedes asignar algo a una variable que no existe")
-            return None
+            print(f"No puedes asignar un valor a {Variable_a_asignar} que no existe. Linea {i}")
+            return True
         
         if Numero_1 in Almacen_Variables:
             Numero_1 = Almacen_Variables[Numero_1]
@@ -182,12 +192,14 @@ def Realizar_Mayor_que(cadena):
             Almacen_Variables[Variable_a_asignar] = Sumado
 
         else:
-            print("Operacion > mal definida")        
+            print(f"Operacion > mal definida. Linea {i}")   
+            return True     
 
     else:
-        return print("Operacion Mayor que invalida")
+        print(f"Operacion Mayor que invalida. Linea {i}")
+        return True
 
-def Realizar_Comaparion_igualdad(cadena):
+def Realizar_Comaparion_igualdad(cadena,i):
     '''
     ***
     cadena: string 
@@ -205,8 +217,8 @@ def Realizar_Comaparion_igualdad(cadena):
         Variable_a_asignar = Obtener_variable(cadena , 0)
 
         if Variable_a_asignar not in Almacen_Variables:
-            print("No puedes asignar algo a una variable que no existe")
-            return None
+            print(f"No puedes asignar un valor a {Variable_a_asignar} que no existe. Linea {i}")
+            return True
         
         if Numero_1 in Almacen_Variables:
             Numero_1 = Almacen_Variables[Numero_1]
@@ -216,25 +228,25 @@ def Realizar_Comaparion_igualdad(cadena):
         
         Numero_1 = str(Numero_1) if Numero_1 is not None else ""
         Numero_2 = str(Numero_2) if Numero_2 is not None else ""
-     
+
         if (bool(re.match(Int, Numero_1))) and (bool(re.match(Int, Numero_2))):
             Sumado = int(Numero_1) == int(Numero_2)
             Almacen_Variables[Variable_a_asignar] = Sumado
         
-        if (bool(re.match(String, Numero_1))) and (bool(re.match(String, Numero_2))):
+        elif (bool(re.match(String, Numero_1))) and (bool(re.match(String, Numero_2))):
             Sumado = Numero_1 == Numero_2
             Almacen_Variables[Variable_a_asignar] = Sumado
 
         elif ((bool(re.match(String, Numero_1))) and (bool(re.match(Int, Numero_2)))) or ((bool(re.match(Int, Numero_1))) and (bool(re.match(String, Numero_2)))):
-            return False
+            Almacen_Variables[Variable_a_asignar] = False
 
         else:
-            print("No se realizo comparacion, ya que estas comparando una variable que no esta definida")        
+            print(f"No se realizo comparacion, ya que estas comparando una variable que no esta definida. Linea {i}")        
 
     else:
-        return print("comparacion invalida")    
+        print(f"Comparacion invalida {i}")    
 
-def MOSTRAR(cadena):
+def MOSTRAR(cadena, i):
     Variable_a_buscar = Obtener_variable(cadena, 2)
     
     if Variable_a_buscar not in Almacen_Variables:
@@ -242,51 +254,73 @@ def MOSTRAR(cadena):
         return None
     else:
         value = Almacen_Variables[Variable_a_buscar]
+        value = str(value)
         # Abrir el archivo en modo append para no sobrescribir el contenido existente
-        with open('archivo.txt', 'a') as archivo:
+        with open('output.txt', 'a') as archivo:
             archivo.write(value + "\n")
         
-def Obtener_tipo_de_dato(cadena):
+def Obtener_tipo_de_dato(cadena, Flag , i):
     '''
     ***
     cadena : Cadena que cumpla con la RegEx Procesamiento_datos 
+    Flag : bool
+    i = int
     ...
     ***
-    Retorna el valor del dato que contenga la cadena, dependiendo del tipo de operación
+    Retorna un entero
     ***
+    Hace el control de entrada y termina el programa en caso de ser necesario
+    y recibe la linea en la que vas
     '''
-    if re.match(Procesamiento_datos, cadena):
+    if (re.match(Procesamiento_datos, cadena)) and Flag:
 
-        if re.match(ASIG, cadena):
-            Asignacion(cadena)
+        if (re.match(ASIG, cadena)) and Flag:
+            Retorno = Asignacion(cadena, i)
+            if Retorno:
+                return False
+            return True
 
-        elif re.match(Suma, cadena):
-            Realizar_suma(cadena)
+        elif (re.match(Suma, cadena)) and Flag:
+            Retorno = Realizar_suma(cadena, i)
+            if Retorno:
+                return False
+            return True
 
-        elif re.match(Multiplicacion, cadena):
-            Realizar_multiplicacion(cadena)
+        elif (re.match(Multiplicacion, cadena)) and Flag:
+            Retorno = Realizar_multiplicacion(cadena, i)
+            if Retorno:
+                return False
+            return True
 
-        elif re.match(Mayor_que, cadena):
-            Realizar_Mayor_que(cadena)
+        elif (re.match(Mayor_que, cadena)) and Flag:
+            Retorno = Realizar_Mayor_que(cadena, i)
+            if Retorno:
+                return False
+            return True
 
-        elif re.match(Igual_que, cadena):
-            Realizar_Comaparion_igualdad(cadena)
-            ##print("Se pide una comparación de igualdad")
+        elif (re.match(Igual_que, cadena)) and Flag:
+            Retorno = Realizar_Comaparion_igualdad(cadena, i)
+            if Retorno:
+                return False
+            return True
 
         else:
-            print("No se ha detectado una operación válida")
+            print(f"No se ha detectado una operación válida. Linea {i}")
 
-        return None
+        ##return None
     
-    elif re.match(DEFINE_PATTERN, cadena):
-        DEFINE(cadena)
+    elif (re.match(DEFINE_PATTERN, cadena)) and Flag:
+        Retorno = DEFINE(cadena, i)
+        if not Retorno:
+            return False
 
-    elif re.match(MOSTRAR_RegEx, cadena):
-        MOSTRAR(cadena)
+        return True
+
+    elif (re.match(MOSTRAR_RegEx, cadena)) and Flag:
+        Retorno = MOSTRAR(cadena, i)
+        return True
     else:
-        print("Error de sintaxis")
+        if Flag :
+           print(f"Error de sintaxis en la linea: {i}") 
 
-def prueba():
-    for clave, valor in Almacen_Variables.items():
-        print(f"{clave}: {valor}")
-        print(type(Almacen_Variables[clave]))
+        return False

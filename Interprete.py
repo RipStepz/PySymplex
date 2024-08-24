@@ -1,30 +1,15 @@
-from funciones import Obtener_tipo_de_dato, prueba, MOSTRAR
+from funciones import Obtener_tipo_de_dato
 from aux_funcion import limpiar_archivo
 
-# Obtener_tipo_de_dato("DEFINE $_Largo")
-# Obtener_tipo_de_dato("DEFINE $_Ancho")
-# Obtener_tipo_de_dato("DEFINE $_Area")
-# Obtener_tipo_de_dato("DEFINE $_Texto")
-# Obtener_tipo_de_dato("DP $_Largo ASIG 6")
-# Obtener_tipo_de_dato("DP $_Ancho ASIG 5")
-# Obtener_tipo_de_dato("DP $_Area * $_Largo $_Ancho")
-# Obtener_tipo_de_dato("DP $_Texto ASIG #La altura del rectangulo es #")
-# Obtener_tipo_de_dato("DP $_Texto + $_Texto $_Area")
-# Obtener_tipo_de_dato("DEFINE $_Var2")
-# Obtener_tipo_de_dato("DP $_Var1 ASIG 6")
-# Obtener_tipo_de_dato("DP $_Var2 ASIG 8")
-# Obtener_tipo_de_dato("DP $_Var1 + $_Var2 $_Var1")
-##prueba()
-limpiar_archivo('archivo.txt')
+limpiar_archivo('output')
 Flag = True
-
+i= 0
 
 with open('codigo.txt', 'r') as archivo:
-    linea = archivo.readline()
-    while linea:
-        linea = linea.strip()  # Quitamos espacios en blanco y saltos de línea
-        if linea:  # Si la línea no está vacía
-            Obtener_tipo_de_dato(linea)  # Llama a tu función para procesar la línea
-        linea = archivo.readline()
-
-##prueba()
+    cadena = archivo.readline()
+    while cadena:
+        i += 1
+        cadena = cadena.strip()  # Quitamos espacios en blanco y saltos de línea
+        if cadena:  # Si la línea no está vacía
+            Flag = Obtener_tipo_de_dato(cadena, Flag , i)  # Llama a tu función para procesar la línea
+        cadena = archivo.readline()
